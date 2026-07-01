@@ -1,11 +1,11 @@
 # ─────────────────────────────────────────────────────────────
 # .github/workflows/git-flow-checks.yml
 #
-# Valida en GitHub (CI) que PRs y commits sigan las reglas:
-#   1. El título del PR usa Conventional Commits
-#   2. El nombre de la rama de origen es válido
-#   3. Los PRs a main solo vienen de release/* o hotfix/*
-#   4. Los PRs a develop vienen de feature/*, bugfix/*, task/* o chore/*
+# Validates that PRs follow Git Flow rules:
+#   1. PR title follows Conventional Commits format
+#   2. Source branch name follows Git Flow naming convention
+#   3. PRs targeting main must come from release/* or hotfix/*
+#   4. PRs targeting develop must come from feature/*, bugfix/*, task/* or chore/*
 # ─────────────────────────────────────────────────────────────
 
 name: Git Flow Checks
@@ -18,38 +18,38 @@ on:
       - develop
 
 jobs:
-  # ── 1. Valida el título del PR (Conventional Commits) ──────
+  # ── 1. Validates PR title against Conventional Commits ─────
   validate-pr-title:
-    name: Título del PR (Conventional Commits)
+    name: PR Title (Conventional Commits)
     runs-on: ubuntu-latest
     steps:
-      - name: Verificar formato del título
+      - name: Check PR title format
         env:
           PR_TITLE: ${{ github.event.pull_request.title }}
         run: |
-          PATTERN="^(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\([a-z0-9\-]+\))?(!)?: .{1,100}$"
+          PATTERN="^(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\([a-z0-9-]+\))?(!)?: .{1,100}$"
           if ! echo "$PR_TITLE" | grep -qE "$PATTERN"; then
-            echo "✗ Título del PR inválido: '$PR_TITLE'"
+            echo "✗ Invalid PR title: '$PR_TITLE'"
             echo ""
-            echo "Formato requerido: <tipo>(<scope>): <descripción>"
+            echo "Required format: <type>(<scope>): <description>"
             echo ""
-            echo "Tipos válidos: feat, fix, docs, style, refactor, perf, test, build, ci, chore, revert"
-            echo "Scopes sugeridos: android, ios, shared, auth, ui, network, db, navigation"
+            echo "Valid types:      feat, fix, docs, style, refactor, perf, test, build, ci, chore, revert"
+            echo "Suggested scopes: android, ios, shared, auth, ui, network, db, navigation"
             echo ""
-            echo "Ejemplos válidos:"
-            echo "  feat(android): agregar pantalla de perfil"
-            echo "  fix(shared): corregir crash en serialización"
-            echo "  chore(deps): actualizar Ktor a 3.1.0"
+            echo "Examples:"
+            echo "  feat(android): add profile screen"
+            echo "  fix(shared): fix crash on serialization"
+            echo "  chore(deps): update Ktor to 3.1.0"
             exit 1
           fi
-          echo "✓ Título válido: '$PR_TITLE'"
+          echo "✓ Valid PR title: '$PR_TITLE'"
 
-  # ── 2. Valida el nombre de la rama de origen ───────────────
+  # ── 2. Validates source branch naming convention ───────────
   validate-branch-name:
-    name: Nombre de rama (Git Flow)
+    name: Branch Name (Git Flow)
     runs-on: ubuntu-latest
     steps:
-      - name: Verificar nombre de rama
+      - name: Check branch name
         env:
           BRANCH: ${{ github.head_ref }}
         run: |
@@ -57,78 +57,102 @@ jobs:
           VALID="^(feature|bugfix|hotfix|task|release|chore)\/([A-Z]+-[0-9]+-[a-z0-9]+(-[a-z0-9]+)*|[0-9]+\.[0-9]+\.[0-9]+|[a-z0-9]+(-[a-z0-9]+)*)$"
 
           if echo "$BRANCH" | grep -qE "$EXEMPT"; then
-            echo "✓ Rama exenta: '$BRANCH'"
+            echo "✓ Exempt branch: '$BRANCH'"
             exit 0
           fi
 
           if ! echo "$BRANCH" | grep -qE "$VALID"; then
-            echo "✗ Nombre de rama inválido: '$BRANCH'"
+            echo "✗ Invalid branch name: '$BRANCH'"
             echo ""
-            echo "Convenciones permitidas:"
-            echo "  feature/KMP-123-descripcion"
+            echo "Allowed conventions:"
+            echo "  feature/KMP-123-short-description"
             echo "  bugfix/KMP-45-fix-login"
             echo "  hotfix/KMP-99-crash-ios"
+            echo "  task/KMP-78-specific-task"
             echo "  release/1.2.0"
-            echo "  chore/actualizar-deps"
+            echo "  chore/update-deps"
             exit 1
           fi
-          echo "✓ Rama válida: '$BRANCH'"
+          echo "✓ Valid branch name: '$BRANCH'"
 
-  # ── 3. Valida que main solo reciba release/* o hotfix/* ────
+  # ── 3. Ensures main only receives release/* or hotfix/* ────
   validate-target-main:
-    name: Protección de main
+    name: Protect main
     runs-on: ubuntu-latest
+    if: github.base_ref == 'main'
     steps:
-      - name: Solo release/* y hotfix/* pueden ir a main
-        if: github.base_ref == 'main'
+      - name: Check source branch for main
         env:
           SOURCE: ${{ github.head_ref }}
         run: |
           ALLOWED="^(release|hotfix)\/"
           if ! echo "$SOURCE" | grep -qE "$ALLOWED"; then
-            echo "✗ Solo ramas release/* o hotfix/* pueden hacer PR a main"
-            echo "  Rama de origen: '$SOURCE'"
+            echo "✗ Branch '$SOURCE' is not allowed to target main"
             echo ""
-            echo "  ¿Quieres integrar una feature? Haz PR a develop."
-            echo "  ¿Es un lanzamiento? Usa release/x.x.x"
-            echo "  ¿Es urgente en producción? Usa hotfix/KMP-XX-descripcion"
+            echo "  Integrating a feature? Open a PR to develop."
+            echo "  Releasing a version?   Use release/x.x.x"
+            echo "  Production emergency?  Use hotfix/KMP-XX-description"
             exit 1
           fi
-          echo "✓ Origen permitido para main: '$SOURCE'"
+          echo "✓ Source branch allowed for main: '$SOURCE'"
 
-  # ── 4. Valida que develop reciba feature/*, bugfix/* o chore/* ──
+  # ── 4. Ensures develop only receives feature/*, bugfix/*, task/* or chore/* ──
   validate-target-develop:
-    name: Protección de develop
+    name: Protect develop
     runs-on: ubuntu-latest
+    if: github.base_ref == 'develop'
     steps:
-      - name: Solo feature/*, bugfix/*, task/* y chore/* pueden ir a develop
-        if: github.base_ref == 'develop'
+      - name: Check source branch for develop
         env:
           SOURCE: ${{ github.head_ref }}
         run: |
           ALLOWED="^(feature|bugfix|task|chore)\/"
           if ! echo "$SOURCE" | grep -qE "$ALLOWED"; then
-            echo "✗ Rama no permitida hacia develop: '$SOURCE'"
+            echo "✗ Branch '$SOURCE' is not allowed to target develop"
             echo ""
-            echo "Ramas permitidas hacia develop:"
-            echo "  feature/KMP-123-nueva-funcionalidad   → nueva funcionalidad"
-            echo "  bugfix/KMP-45-fix-login               → corrección encontrada en desarrollo"
-            echo "  task/KMP-78-tarea-especifica          → tarea corta o subtarea"
-            echo "  chore/actualizar-deps                 → mantenimiento rápido"
+            echo "Allowed branches for develop:"
+            echo "  feature/KMP-123-new-feature   → new functionality"
+            echo "  bugfix/KMP-45-fix-login        → bug found during development"
+            echo "  task/KMP-78-specific-task      → short task or subtask"
+            echo "  chore/update-deps              → quick maintenance"
             echo ""
-            echo "  ¿Es una emergencia en producción? Usa hotfix/* → main"
+            echo "  Production emergency? Use hotfix/* → main"
             exit 1
           fi
-          echo "✓ Origen permitido para develop: '$SOURCE'"
+          echo "✓ Source branch allowed for develop: '$SOURCE'"
 
-  # ── 5. Resumen de todos los checks ────────────────────────
+  # ── 5. Summary — all jobs must pass or be intentionally skipped ──
   summary:
     name: Git Flow OK
     runs-on: ubuntu-latest
+    if: always()
     needs:
       - validate-pr-title
       - validate-branch-name
       - validate-target-main
       - validate-target-develop
     steps:
-      - run: echo "✓ Todos los checks de Git Flow pasaron correctamente"
+      - name: Evaluate all job results
+        env:
+          PR_TITLE:       ${{ needs.validate-pr-title.result }}
+          BRANCH_NAME:    ${{ needs.validate-branch-name.result }}
+          TARGET_MAIN:    ${{ needs.validate-target-main.result }}
+          TARGET_DEVELOP: ${{ needs.validate-target-develop.result }}
+        run: |
+          echo "Results:"
+          echo "  validate-pr-title:       $PR_TITLE"
+          echo "  validate-branch-name:    $BRANCH_NAME"
+          echo "  validate-target-main:    $TARGET_MAIN"
+          echo "  validate-target-develop: $TARGET_DEVELOP"
+          echo ""
+
+          # A job result is valid if it passed or was skipped
+          # skipped = the if: condition was false (PR targets the other branch)
+          for RESULT in "$PR_TITLE" "$BRANCH_NAME" "$TARGET_MAIN" "$TARGET_DEVELOP"; do
+            if [[ "$RESULT" != "success" && "$RESULT" != "skipped" ]]; then
+              echo "✗ One or more Git Flow checks failed — merge is blocked"
+              exit 1
+            fi
+          done
+
+          echo "✓ All Git Flow checks passed successfully"
