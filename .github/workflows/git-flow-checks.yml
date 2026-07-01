@@ -1,0 +1,131 @@
+# ─────────────────────────────────────────────────────────────
+# .github/workflows/git-flow-checks.yml
+#
+# Valida en GitHub (CI) que PRs y commits sigan las reglas:
+#   1. El título del PR usa Conventional Commits
+#   2. El nombre de la rama de origen es válido
+#   3. Los PRs a main solo vienen de release/* o hotfix/*
+#   4. Los PRs a develop vienen de feature/*, bugfix/* o chore/*
+# ─────────────────────────────────────────────────────────────
+
+name: Git Flow Checks
+
+on:
+  pull_request:
+    types: [opened, edited, synchronize, reopened]
+    branches:
+      - main
+      - develop
+
+jobs:
+  # ── 1. Valida el título del PR (Conventional Commits) ──────
+  validate-pr-title:
+    name: Título del PR (Conventional Commits)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Verificar formato del título
+        env:
+          PR_TITLE: ${{ github.event.pull_request.title }}
+        run: |
+          PATTERN="^(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\([a-z0-9\-]+\))?(!)?: .{1,100}$"
+          if ! echo "$PR_TITLE" | grep -qE "$PATTERN"; then
+            echo "✗ Título del PR inválido: '$PR_TITLE'"
+            echo ""
+            echo "Formato requerido: <tipo>(<scope>): <descripción>"
+            echo ""
+            echo "Tipos válidos: feat, fix, docs, style, refactor, perf, test, build, ci, chore, revert"
+            echo "Scopes sugeridos: android, ios, shared, auth, ui, network, db, navigation"
+            echo ""
+            echo "Ejemplos válidos:"
+            echo "  feat(android): agregar pantalla de perfil"
+            echo "  fix(shared): corregir crash en serialización"
+            echo "  chore(deps): actualizar Ktor a 3.1.0"
+            exit 1
+          fi
+          echo "✓ Título válido: '$PR_TITLE'"
+
+  # ── 2. Valida el nombre de la rama de origen ───────────────
+  validate-branch-name:
+    name: Nombre de rama (Git Flow)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Verificar nombre de rama
+        env:
+          BRANCH: ${{ github.head_ref }}
+        run: |
+          EXEMPT="^(main|develop)$"
+          VALID="^(feature|bugfix|hotfix|release|chore)\/([A-Z]+-[0-9]+-[a-z0-9]+(-[a-z0-9]+)*|[0-9]+\.[0-9]+\.[0-9]+|[a-z0-9]+(-[a-z0-9]+)*)$"
+
+          if echo "$BRANCH" | grep -qE "$EXEMPT"; then
+            echo "✓ Rama exenta: '$BRANCH'"
+            exit 0
+          fi
+
+          if ! echo "$BRANCH" | grep -qE "$VALID"; then
+            echo "✗ Nombre de rama inválido: '$BRANCH'"
+            echo ""
+            echo "Convenciones permitidas:"
+            echo "  feature/KMP-123-descripcion"
+            echo "  bugfix/KMP-45-fix-login"
+            echo "  hotfix/KMP-99-crash-ios"
+            echo "  release/1.2.0"
+            echo "  chore/actualizar-deps"
+            exit 1
+          fi
+          echo "✓ Rama válida: '$BRANCH'"
+
+  # ── 3. Valida que main solo reciba release/* o hotfix/* ────
+  validate-target-main:
+    name: Protección de main
+    runs-on: ubuntu-latest
+    if: github.base_ref == 'main'
+    steps:
+      - name: Solo release/* y hotfix/* pueden ir a main
+        env:
+          SOURCE: ${{ github.head_ref }}
+        run: |
+          ALLOWED="^(release|hotfix)\/"
+          if ! echo "$SOURCE" | grep -qE "$ALLOWED"; then
+            echo "✗ Solo ramas release/* o hotfix/* pueden hacer PR a main"
+            echo "  Rama de origen: '$SOURCE'"
+            echo ""
+            echo "  ¿Quieres integrar una feature? Haz PR a develop."
+            echo "  ¿Es un lanzamiento? Usa release/x.x.x"
+            echo "  ¿Es urgente en producción? Usa hotfix/KMP-XX-descripcion"
+            exit 1
+          fi
+          echo "✓ Origen permitido para main: '$SOURCE'"
+
+  # ── 4. Valida que develop reciba feature/*, bugfix/* o chore/* ──
+  validate-target-develop:
+    name: Protección de develop
+    runs-on: ubuntu-latest
+    if: github.base_ref == 'develop'
+    steps:
+      - name: Solo feature/*, bugfix/* y chore/* pueden ir a develop
+        env:
+          SOURCE: ${{ github.head_ref }}
+        run: |
+          ALLOWED="^(feature|bugfix|chore)\/"
+          if ! echo "$SOURCE" | grep -qE "$ALLOWED"; then
+            echo "✗ Rama no permitida hacia develop: '$SOURCE'"
+            echo ""
+            echo "Ramas permitidas hacia develop:"
+            echo "  feature/KMP-123-nueva-funcionalidad   → nueva funcionalidad"
+            echo "  bugfix/KMP-45-fix-login               → corrección encontrada en desarrollo"
+            echo "  chore/actualizar-deps                 → mantenimiento rápido"
+            echo ""
+            echo "  ¿Es una emergencia en producción? Usa hotfix/* → main"
+            exit 1
+          fi
+          echo "✓ Origen permitido para develop: '$SOURCE'"
+
+  # ── 5. Resumen de todos los checks ────────────────────────
+  summary:
+    name: Git Flow OK
+    runs-on: ubuntu-latest
+    needs:
+      - validate-pr-title
+      - validate-branch-name
+    steps:
+      - run: echo "✓ Todos los checks de Git Flow pasaron correctamente"
