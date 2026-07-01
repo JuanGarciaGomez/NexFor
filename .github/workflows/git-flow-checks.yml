@@ -5,7 +5,7 @@
 #   1. El título del PR usa Conventional Commits
 #   2. El nombre de la rama de origen es válido
 #   3. Los PRs a main solo vienen de release/* o hotfix/*
-#   4. Los PRs a develop vienen de feature/*, bugfix/* o chore/*
+#   4. Los PRs a develop vienen de feature/*, bugfix/*, task/* o chore/*
 # ─────────────────────────────────────────────────────────────
 
 name: Git Flow Checks
@@ -78,9 +78,9 @@ jobs:
   validate-target-main:
     name: Protección de main
     runs-on: ubuntu-latest
-    if: github.base_ref == 'main'
     steps:
       - name: Solo release/* y hotfix/* pueden ir a main
+        if: github.base_ref == 'main'
         env:
           SOURCE: ${{ github.head_ref }}
         run: |
@@ -100,9 +100,9 @@ jobs:
   validate-target-develop:
     name: Protección de develop
     runs-on: ubuntu-latest
-    if: github.base_ref == 'develop'
     steps:
       - name: Solo feature/*, bugfix/*, task/* y chore/* pueden ir a develop
+        if: github.base_ref == 'develop'
         env:
           SOURCE: ${{ github.head_ref }}
         run: |
@@ -113,6 +113,7 @@ jobs:
             echo "Ramas permitidas hacia develop:"
             echo "  feature/KMP-123-nueva-funcionalidad   → nueva funcionalidad"
             echo "  bugfix/KMP-45-fix-login               → corrección encontrada en desarrollo"
+            echo "  task/KMP-78-tarea-especifica          → tarea corta o subtarea"
             echo "  chore/actualizar-deps                 → mantenimiento rápido"
             echo ""
             echo "  ¿Es una emergencia en producción? Usa hotfix/* → main"
