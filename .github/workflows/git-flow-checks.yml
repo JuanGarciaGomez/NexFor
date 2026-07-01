@@ -54,7 +54,7 @@ jobs:
           BRANCH: ${{ github.head_ref }}
         run: |
           EXEMPT="^(main|develop)$"
-          VALID="^(feature|bugfix|hotfix|release|chore)\/([A-Z]+-[0-9]+-[a-z0-9]+(-[a-z0-9]+)*|[0-9]+\.[0-9]+\.[0-9]+|[a-z0-9]+(-[a-z0-9]+)*)$"
+          VALID="^(feature|bugfix|hotfix|task|release|chore)\/([A-Z]+-[0-9]+-[a-z0-9]+(-[a-z0-9]+)*|[0-9]+\.[0-9]+\.[0-9]+|[a-z0-9]+(-[a-z0-9]+)*)$"
 
           if echo "$BRANCH" | grep -qE "$EXEMPT"; then
             echo "✓ Rama exenta: '$BRANCH'"
@@ -102,11 +102,11 @@ jobs:
     runs-on: ubuntu-latest
     if: github.base_ref == 'develop'
     steps:
-      - name: Solo feature/*, bugfix/* y chore/* pueden ir a develop
+      - name: Solo feature/*, bugfix/*, task/* y chore/* pueden ir a develop
         env:
           SOURCE: ${{ github.head_ref }}
         run: |
-          ALLOWED="^(feature|bugfix|chore)\/"
+          ALLOWED="^(feature|bugfix|task|chore)\/"
           if ! echo "$SOURCE" | grep -qE "$ALLOWED"; then
             echo "✗ Rama no permitida hacia develop: '$SOURCE'"
             echo ""
@@ -127,5 +127,7 @@ jobs:
     needs:
       - validate-pr-title
       - validate-branch-name
+      - validate-target-main
+      - validate-target-develop
     steps:
       - run: echo "✓ Todos los checks de Git Flow pasaron correctamente"
