@@ -6,16 +6,18 @@
 #   2. Source branch name follows Git Flow naming convention
 #   3. PRs targeting main must come from release/* or hotfix/*
 #   4. PRs targeting develop must come from feature/*, bugfix/*, task/* or chore/*
+#   5. PRs targeting release/* must come from bugfix/* or chore/*
 # ─────────────────────────────────────────────────────────────
 
 name: Git Flow Checks
 
 on:
   pull_request:
-    types: [opened, edited, synchronize, reopened]
+    types: [ opened, edited, synchronize, reopened ]
     branches:
       - main
       - develop
+      - "release/**"
 
 jobs:
   # ── 1. Validates PR title against Conventional Commits ─────
@@ -121,7 +123,31 @@ jobs:
           fi
           echo "✓ Source branch allowed for develop: '$SOURCE'"
 
-  # ── 5. Summary — all jobs must pass or be intentionally skipped ──
+  # ── 5. Ensures release/* only receives bugfix/* or chore/* ─
+  validate-target-release:
+    name: Protect release
+    runs-on: ubuntu-latest
+    if: startsWith(github.base_ref, 'release/')
+    steps:
+      - name: Check source branch for release
+        env:
+          SOURCE: ${{ github.head_ref }}
+        run: |
+          ALLOWED="^(bugfix|chore)\/"
+          if ! echo "$SOURCE" | grep -qE "$ALLOWED"; then
+            echo "✗ Branch '$SOURCE' is not allowed to target a release branch"
+            echo ""
+            echo "Allowed branches for release/*:"
+            echo "  bugfix/KMP-45-fix-login   → last-minute bug fix before launch"
+            echo "  chore/update-deps          → dependency or config adjustment"
+            echo ""
+            echo "  New features are not allowed in a release branch."
+            echo "  Schedule them for the next release cycle via develop."
+            exit 1
+          fi
+          echo "✓ Source branch allowed for release: '$SOURCE'"
+
+  # ── 7. Summary — all jobs must pass or be intentionally skipped ──
   summary:
     name: Git Flow OK
     runs-on: ubuntu-latest
@@ -131,24 +157,26 @@ jobs:
       - validate-branch-name
       - validate-target-main
       - validate-target-develop
+      - validate-target-release
     steps:
       - name: Evaluate all job results
         env:
-          PR_TITLE:       ${{ needs.validate-pr-title.result }}
-          BRANCH_NAME:    ${{ needs.validate-branch-name.result }}
-          TARGET_MAIN:    ${{ needs.validate-target-main.result }}
+          PR_TITLE: ${{ needs.validate-pr-title.result }}
+          BRANCH_NAME: ${{ needs.validate-branch-name.result }}
+          TARGET_MAIN: ${{ needs.validate-target-main.result }}
           TARGET_DEVELOP: ${{ needs.validate-target-develop.result }}
+          TARGET_RELEASE: ${{ needs.validate-target-release.result }}
         run: |
           echo "Results:"
-          echo "  validate-pr-title:       $PR_TITLE"
-          echo "  validate-branch-name:    $BRANCH_NAME"
-          echo "  validate-target-main:    $TARGET_MAIN"
+          echo "  validate-pr-title:      $PR_TITLE"
+          echo "  validate-branch-name:   $BRANCH_NAME"
+          echo "  validate-target-main:   $TARGET_MAIN"
           echo "  validate-target-develop: $TARGET_DEVELOP"
+          echo "  validate-target-release: $TARGET_RELEASE"
           echo ""
 
-          # A job result is valid if it passed or was skipped
-          # skipped = the if: condition was false (PR targets the other branch)
-          for RESULT in "$PR_TITLE" "$BRANCH_NAME" "$TARGET_MAIN" "$TARGET_DEVELOP"; do
+          # Eliminamos $TARGET_FEATURE de la lista del for
+          for RESULT in "$PR_TITLE" "$BRANCH_NAME" "$TARGET_MAIN" "$TARGET_DEVELOP" "$TARGET_RELEASE"; do
             if [[ "$RESULT" != "success" && "$RESULT" != "skipped" ]]; then
               echo "✗ One or more Git Flow checks failed — merge is blocked"
               exit 1
