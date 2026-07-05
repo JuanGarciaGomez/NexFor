@@ -1,0 +1,37 @@
+// ── :shared:design-system ─────────────────────────────────────
+// Single source of truth for the app's visual identity.
+// All :feature:* modules import from here — no feature defines
+// its own theme, colors, or base components locally.
+// Pure Compose Multiplatform — no business logic whatsoever.
+//
+// Internal structure:
+//   theme/
+//     AppTheme.kt               → MaterialTheme wrapper, entry point for all features
+//     AppColors.kt              → light and dark color schemes
+//     AppTypography.kt          → font families, sizes, weights
+//     AppShapes.kt              → corner radius tokens
+//     AppSpacing.kt             → spacing scale (4, 8, 12, 16, 24, 32 dp)
+//   components/
+//     buttons/
+//       PrimaryButton.kt        → main CTA button
+//       SecondaryButton.kt      → outlined / ghost variant
+//       IconButton.kt
+//     inputs/
+//       AppTextField.kt         → styled text input with label and error state
+//       AppSearchBar.kt
+//     feedback/
+//       AppSnackbar.kt          → themed snackbar for error / success
+//       AppLoadingIndicator.kt  → centered circular progress
+//       AppEmptyState.kt        → empty list / error placeholder
+//     layout/
+//       AppScaffold.kt          → scaffold with themed top bar
+//       AppCard.kt              → surface card with consistent elevation
+//     navigation/
+//       AppBottomBar.kt         → bottom navigation bar
+//       AppTopBar.kt            → top app bar variants
+//   resources/
+//     icons/                    → shared SVG / vector drawables
+//     fonts/                    → custom font files
+//
+// Depends on  : Compose Multiplatform only
+// Must NOT import : :domain:*, :data:*, :core:network, :core:database
