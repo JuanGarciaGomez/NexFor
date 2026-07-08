@@ -1,0 +1,49 @@
+// ── :core:network ────────────────────────────────────────────
+// HTTP infrastructure shared by all :data:* modules.
+// Configures the Ktor client once for the entire app:
+// base URL, headers, authentication interceptor, JSON
+// serialization, and centralized HTTP error handling.
+//
+// What lives here:
+//   - HttpClientFactory.kt      → builds and configures the Ktor client
+//   - AuthInterceptor.kt        → injects auth token on every request
+//   - NetworkError.kt           → sealed class for HTTP error types
+//   - NetworkModule.kt          → DI bindings (Koin / Hilt)
+//
+// Depends on  : :core:common only
+// Must NOT import : :domain:*, :data:*, :feature:*
+
+// ── :core:database ───────────────────────────────────────────
+// Local persistence infrastructure shared by all :data:* modules.
+// Provides the correct SQLite driver per platform via expect/actual
+// (AndroidSqliteDriver on Android, NativeSqliteDriver on iOS),
+// defines the top-level AppDatabase, schema migrations, and
+// global TypeConverters. Each :data:* module declares its own
+// @Dao interfaces and @Entity classes — not here.
+//
+// What lives here:
+//   - AppDatabase.kt            → Room database class (@Database)
+//   - DatabaseDriver.kt         → expect declaration
+//   - DatabaseDriver.android.kt → actual for Android
+//   - DatabaseDriver.ios.kt     → actual for iOS
+//   - DatabaseModule.kt         → DI bindings
+//   - migrations/               → schema migration scripts
+//
+// Depends on  : :core:common only
+// Must NOT import : :domain:*, :data:*, :feature:*
+
+// ── :core:common ─────────────────────────────────────────────
+// Cross-cutting utilities with zero business logic.
+// Pure Kotlin — no Android, Ktor, Room, or Compose imports.
+// Any module in the project can safely depend on this without
+// creating circular dependencies.
+//
+// What lives here:
+//   - AppResult.kt              → sealed Result<T> / Either<L,R>
+//   - DispatcherProvider.kt     → testable coroutine dispatcher wrapper
+//   - FlowExtensions.kt         → Flow utility operators
+//   - DateTimeUtils.kt          → platform date/time helpers (expect/actual)
+//   - Constants.kt              → global app-wide constants
+//
+// Depends on  : Kotlin stdlib only — no other project module
+// Must NOT import : any framework or business logic
