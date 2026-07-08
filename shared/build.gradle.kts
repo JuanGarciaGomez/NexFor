@@ -40,6 +40,8 @@ kotlin {
         }
         commonMain.dependencies {
             implementation(projects.core.network)
+            implementation(projects.data.catalog)
+            implementation(projects.feature.inventory)
 
             implementation(libs.koin.core)
             implementation(libs.koin.compose)

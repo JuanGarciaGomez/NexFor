@@ -1,8 +1,9 @@
 package com.project.nexfor.di
 
 import com.project.nexfor.core.network.di.networkModule
+import com.project.nexfor.data.catalog.di.catalogDataModule
+import com.project.nexfor.feature.inventory.di.inventoryFeatureModule
 import org.koin.core.context.startKoin
-import org.koin.core.module.Module
 import org.koin.dsl.KoinAppDeclaration
 import org.koin.dsl.module
 
@@ -23,6 +24,8 @@ fun initKoin(appDeclaration: KoinAppDeclaration = {}) =
         appDeclaration()
         modules(
             appModule,
-            networkModule
+            networkModule,
+            catalogDataModule,
+            inventoryFeatureModule
         )
     }
