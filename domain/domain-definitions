@@ -1,0 +1,19 @@
+// ── :domain:* ─────────────────────────────────────────────────
+// The business heart of the application.
+// Pure Kotlin — zero imports from Android, Ktor, Room, or Compose.
+// Defines WHAT the system does (UseCases), WHAT it works with
+// (entities), and WHAT it needs (repository interfaces).
+// This layer never changes when you switch databases or APIs.
+//
+// Internal structure (same pattern for every :domain:* module):
+//   model/
+//     Xxx.kt                    → domain entity (plain Kotlin data class)
+//   repository/
+//     XxxRepository.kt          → interface (contract for :data:* to implement)
+//   usecase/
+//     XxxUseCase.kt             → single-responsibility business operation
+//   exception/
+//     XxxException.kt           → domain-specific error types
+//
+// Depends on  : :core:common only
+// Must NOT import : :data:*, :core:network, :core:database, :feature:*

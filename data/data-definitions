@@ -1,0 +1,26 @@
+// ── :data:* ───────────────────────────────────────────────────
+// Implements the repository contracts defined in :domain:*.
+// Each module maps to one business context and knows how to
+// fetch, store, and synchronize data — from the network,
+// the local database, or both (offline-first strategy).
+// Features never talk to :data:* directly; they go through
+// UseCases in :domain:*.
+//
+// Internal structure (same pattern for every :data:* module):
+//   repository/
+//     XxxRepositoryImpl.kt      → implements domain XxxRepository interface
+//   remote/
+//     XxxRemoteDataSource.kt    → Ktor API calls
+//     dto/
+//       XxxDto.kt               → JSON response models
+//   local/
+//     XxxLocalDataSource.kt     → Room DAO wrapper
+//     entity/
+//       XxxEntity.kt            → Room @Entity table
+//   mapper/
+//     XxxMapper.kt              → DTO / Entity ↔ Domain model conversions
+//   di/
+//     XxxDataModule.kt          → DI bindings for this context
+//
+// Depends on  : :domain:*, :core:network, :core:database, :core:common
+// Must NOT import : :feature:*, :composeApp, :shared:design-system

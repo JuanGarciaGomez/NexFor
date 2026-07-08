@@ -1,0 +1,31 @@
+// ── :feature:* ────────────────────────────────────────────────
+// UI layer — one module per functional context.
+// Contains ONLY Composables, ViewModels (MVI pattern), and
+// internal navigation. Features never talk to :data:* directly;
+// all business operations go through UseCases from :domain:*.
+// Features never import each other — communication happens
+// through the navigation graph in :composeApp.
+//
+// MVI pattern enforced per screen:
+//   UiState   → immutable snapshot of what the UI shows
+//   Intent    → sealed class of user actions / events
+//   ViewModel → maps Intents → updates UiState via StateFlow
+//
+// Internal structure (same pattern for every :feature:* module):
+//   ui/
+//     XxxScreen.kt              → root Composable, observes UiState
+//     components/
+//       XxxComponent.kt         → reusable sub-composables for this feature
+//   viewmodel/
+//     XxxViewModel.kt           → holds StateFlow<XxxUiState>, handles XxxIntent
+//   model/
+//     XxxUiState.kt             → data class with all UI state fields
+//     XxxIntent.kt              → sealed class of user actions
+//     XxxSideEffect.kt          → one-time events (navigation, toasts)
+//   navigation/
+//     XxxNavGraph.kt            → internal routes for this feature
+//   di/
+//     XxxFeatureModule.kt       → DI bindings (ViewModel, UseCase injection)
+//
+// Depends on  : :domain:*, :shared:design-system, :core:common
+// Must NOT import : :data:*, another :feature:*, :core:network, :core:database
