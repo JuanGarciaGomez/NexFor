@@ -7,6 +7,10 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import nexfor.shared.generated.resources.Res
+import nexfor.shared.generated.resources.inter_bold
+import nexfor.shared.generated.resources.inter_medium
+import nexfor.shared.generated.resources.inter_regular
+import nexfor.shared.generated.resources.inter_semibold
 import org.jetbrains.compose.resources.Font
 
 @Composable
