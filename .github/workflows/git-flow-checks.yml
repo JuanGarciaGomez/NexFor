@@ -2,14 +2,13 @@
 # .github/workflows/git-flow-checks.yml
 #
 # Validates that PRs follow Git Flow rules:
-#   1. PR title follows Conventional Commits format
-#   2. Source branch name follows Git Flow naming convention
-#   3. PRs targeting main must come from release/* or hotfix/*
-#   4. PRs targeting develop must come from feature/*, bugfix/*, task/* or chore/*
-#   5. PRs targeting release/* must come from bugfix/* or chore/*
+#   1. PR title starts with a valid Conventional Commits type (case-insensitive)
+#   2. Source branch name starts with a valid Git Flow prefix
+#   3. Target branches are protected according to Git Flow
+#   4. The Android app compiles successfully
 # ─────────────────────────────────────────────────────────────
 
-name: Git Flow Checks
+name: Git Flow & Build Checks
 
 on:
   pull_request:
@@ -20,43 +19,36 @@ on:
       - "release/**"
 
 jobs:
-  # ── 1. Validates PR title against Conventional Commits ─────
+  # ── 1. Validates PR title type (Relaxed) ───────────────────
   validate-pr-title:
     name: PR Title (Conventional Commits)
     runs-on: ubuntu-latest
     steps:
-      - name: Check PR title format
+      - name: Check PR title prefix
         env:
           PR_TITLE: ${{ github.event.pull_request.title }}
         run: |
-          PATTERN="^(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\([a-z0-9-]+\))?(!)?: .{1,100}$"
-          if ! echo "$PR_TITLE" | grep -qE "$PATTERN"; then
+          PATTERN="^(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(.*):.+"
+          if ! echo "$PR_TITLE" | grep -qiE "$PATTERN"; then
             echo "✗ Invalid PR title: '$PR_TITLE'"
             echo ""
-            echo "Required format: <type>(<scope>): <description>"
-            echo ""
-            echo "Valid types:      feat, fix, docs, style, refactor, perf, test, build, ci, chore, revert"
-            echo "Suggested scopes: android, ios, shared, auth, ui, network, db, navigation"
-            echo ""
-            echo "Examples:"
-            echo "  feat(android): add profile screen"
-            echo "  fix(shared): fix crash on serialization"
-            echo "  chore(deps): update Ktor to 3.1.0"
+            echo "Required format: <type>: <description>  (scope is optional)"
+            echo "Valid types: feat, fix, docs, style, refactor, perf, test, build, ci, chore, revert"
             exit 1
           fi
-          echo "✓ Valid PR title: '$PR_TITLE'"
+          echo "✓ Valid PR title format: '$PR_TITLE'"
 
-  # ── 2. Validates source branch naming convention ───────────
+  # ── 2. Validates source branch prefix (Relaxed) ────────────
   validate-branch-name:
-    name: Branch Name (Git Flow)
+    name: Branch Name Prefix
     runs-on: ubuntu-latest
     steps:
-      - name: Check branch name
+      - name: Check branch prefix
         env:
           BRANCH: ${{ github.head_ref }}
         run: |
           EXEMPT="^(main|develop)$"
-          VALID="^(feature|bugfix|hotfix|task|release|chore)\/([A-Z]+-[0-9]+-[a-z0-9]+(-[a-z0-9]+)*|[0-9]+\.[0-9]+\.[0-9]+|[a-z0-9]+(-[a-z0-9]+)*)$"
+          VALID="^(feature|bugfix|hotfix|task|release|chore)\/.+"
 
           if echo "$BRANCH" | grep -qE "$EXEMPT"; then
             echo "✓ Exempt branch: '$BRANCH'"
@@ -64,18 +56,12 @@ jobs:
           fi
 
           if ! echo "$BRANCH" | grep -qE "$VALID"; then
-            echo "✗ Invalid branch name: '$BRANCH'"
+            echo "✗ Invalid branch prefix: '$BRANCH'"
             echo ""
-            echo "Allowed conventions:"
-            echo "  feature/KMP-123-short-description"
-            echo "  bugfix/KMP-45-fix-login"
-            echo "  hotfix/KMP-99-crash-ios"
-            echo "  task/KMP-78-specific-task"
-            echo "  release/1.2.0"
-            echo "  chore/update-deps"
+            echo "Must start with: feature/, bugfix/, hotfix/, task/, release/, or chore/"
             exit 1
           fi
-          echo "✓ Valid branch name: '$BRANCH'"
+          echo "✓ Valid branch prefix: '$BRANCH'"
 
   # ── 3. Ensures main only receives release/* or hotfix/* ────
   validate-target-main:
@@ -90,13 +76,9 @@ jobs:
           ALLOWED="^(release|hotfix)\/"
           if ! echo "$SOURCE" | grep -qE "$ALLOWED"; then
             echo "✗ Branch '$SOURCE' is not allowed to target main"
-            echo ""
-            echo "  Integrating a feature? Open a PR to develop."
-            echo "  Releasing a version?   Use release/x.x.x"
-            echo "  Production emergency?  Use hotfix/KMP-XX-description"
             exit 1
           fi
-          echo "✓ Source branch allowed for main: '$SOURCE'"
+          echo "✓ Source branch allowed for main"
 
   # ── 4. Ensures develop only receives feature/*, bugfix/*, task/* or chore/* ──
   validate-target-develop:
@@ -111,17 +93,9 @@ jobs:
           ALLOWED="^(feature|bugfix|task|chore)\/"
           if ! echo "$SOURCE" | grep -qE "$ALLOWED"; then
             echo "✗ Branch '$SOURCE' is not allowed to target develop"
-            echo ""
-            echo "Allowed branches for develop:"
-            echo "  feature/KMP-123-new-feature   → new functionality"
-            echo "  bugfix/KMP-45-fix-login        → bug found during development"
-            echo "  task/KMP-78-specific-task      → short task or subtask"
-            echo "  chore/update-deps              → quick maintenance"
-            echo ""
-            echo "  Production emergency? Use hotfix/* → main"
             exit 1
           fi
-          echo "✓ Source branch allowed for develop: '$SOURCE'"
+          echo "✓ Source branch allowed for develop"
 
   # ── 5. Ensures release/* only receives bugfix/* or chore/* ─
   validate-target-release:
@@ -136,20 +110,34 @@ jobs:
           ALLOWED="^(bugfix|chore)\/"
           if ! echo "$SOURCE" | grep -qE "$ALLOWED"; then
             echo "✗ Branch '$SOURCE' is not allowed to target a release branch"
-            echo ""
-            echo "Allowed branches for release/*:"
-            echo "  bugfix/KMP-45-fix-login   → last-minute bug fix before launch"
-            echo "  chore/update-deps          → dependency or config adjustment"
-            echo ""
-            echo "  New features are not allowed in a release branch."
-            echo "  Schedule them for the next release cycle via develop."
             exit 1
           fi
-          echo "✓ Source branch allowed for release: '$SOURCE'"
+          echo "✓ Source branch allowed for release"
+
+  # ── 6. BUILD CHECK: Compile Android App ────────────────────
+  build-android:
+    name: Build Android
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'zulu'
+          cache: 'gradle'
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      - name: Assemble Android Debug
+        run: ./gradlew :androidApp:assembleDebug
 
   # ── 7. Summary — all jobs must pass or be intentionally skipped ──
   summary:
-    name: Git Flow OK
+    name: PR Checks Summary
     runs-on: ubuntu-latest
     if: always()
     needs:
@@ -158,6 +146,7 @@ jobs:
       - validate-target-main
       - validate-target-develop
       - validate-target-release
+      - build-android
     steps:
       - name: Evaluate all job results
         env:
@@ -166,21 +155,12 @@ jobs:
           TARGET_MAIN: ${{ needs.validate-target-main.result }}
           TARGET_DEVELOP: ${{ needs.validate-target-develop.result }}
           TARGET_RELEASE: ${{ needs.validate-target-release.result }}
+          BUILD_ANDROID: ${{ needs.build-android.result }}
         run: |
-          echo "Results:"
-          echo "  validate-pr-title:      $PR_TITLE"
-          echo "  validate-branch-name:   $BRANCH_NAME"
-          echo "  validate-target-main:   $TARGET_MAIN"
-          echo "  validate-target-develop: $TARGET_DEVELOP"
-          echo "  validate-target-release: $TARGET_RELEASE"
-          echo ""
-
-          # Eliminamos $TARGET_FEATURE de la lista del for
-          for RESULT in "$PR_TITLE" "$BRANCH_NAME" "$TARGET_MAIN" "$TARGET_DEVELOP" "$TARGET_RELEASE"; do
+          for RESULT in "$PR_TITLE" "$BRANCH_NAME" "$TARGET_MAIN" "$TARGET_DEVELOP" "$TARGET_RELEASE" "$BUILD_ANDROID"; do
             if [[ "$RESULT" != "success" && "$RESULT" != "skipped" ]]; then
-              echo "✗ One or more Git Flow checks failed — merge is blocked"
+              echo "✗ One or more checks failed — merge is blocked"
               exit 1
             fi
           done
-
-          echo "✓ All Git Flow checks passed successfully"
+          echo "✓ All checks passed successfully"
