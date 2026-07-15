@@ -1,4 +1,4 @@
-package com.project.nexfor.theme
+package com.project.nexfor.core.ui.theme
 
 import androidx.compose.ui.graphics.Color
 

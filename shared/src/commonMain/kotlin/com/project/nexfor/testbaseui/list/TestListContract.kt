@@ -1,10 +1,10 @@
 package com.project.nexfor.testbaseui.list
 
-import com.project.nexfor.designsystem.components.AppDialog
-import com.project.nexfor.designsystem.components.LoadState
-import com.project.nexfor.mvi.UiEffect
-import com.project.nexfor.mvi.UiIntent
-import com.project.nexfor.mvi.UiState
+import com.project.nexfor.core.ui.designsystem.components.AppDialog
+import com.project.nexfor.core.ui.designsystem.components.LoadState
+import com.project.nexfor.core.ui.mvi.UiEffect
+import com.project.nexfor.core.ui.mvi.UiIntent
+import com.project.nexfor.core.ui.mvi.UiState
 
 /**
  * ============================================================================

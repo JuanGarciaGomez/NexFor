@@ -1,9 +1,9 @@
 package com.project.nexfor.testbaseui.list
 
 import androidx.lifecycle.viewModelScope
-import com.project.nexfor.designsystem.components.AppDialog
-import com.project.nexfor.designsystem.components.LoadState
-import com.project.nexfor.mvi.BaseViewModel
+import com.project.nexfor.core.ui.designsystem.components.AppDialog
+import com.project.nexfor.core.ui.designsystem.components.LoadState
+import com.project.nexfor.core.ui.mvi.BaseViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 

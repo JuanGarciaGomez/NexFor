@@ -1,4 +1,4 @@
-package com.project.nexfor.designsystem
+package com.project.nexfor.core.ui.designsystem
 
 import androidx.compose.ui.unit.dp
 object AppSpacing {

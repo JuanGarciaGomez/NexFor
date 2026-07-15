@@ -1,4 +1,4 @@
-package com.project.nexfor.designsystem.components
+package com.project.nexfor.core.ui.designsystem.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -16,8 +16,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
-import com.project.nexfor.designsystem.AppSpacing
+import com.project.nexfor.core.ui.designsystem.AppSpacing
 
 sealed class LoadState {
     data object Idle : LoadState()

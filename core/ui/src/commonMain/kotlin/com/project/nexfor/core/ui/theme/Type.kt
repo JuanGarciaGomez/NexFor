@@ -1,4 +1,4 @@
-package com.project.nexfor.theme
+package com.project.nexfor.core.ui.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.runtime.Composable
@@ -6,11 +6,11 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
-import nexfor.shared.generated.resources.Res
-import nexfor.shared.generated.resources.inter_bold
-import nexfor.shared.generated.resources.inter_medium
-import nexfor.shared.generated.resources.inter_regular
-import nexfor.shared.generated.resources.inter_semibold
+import nexfor.core.ui.generated.resources.Res
+import nexfor.core.ui.generated.resources.inter_bold
+import nexfor.core.ui.generated.resources.inter_medium
+import nexfor.core.ui.generated.resources.inter_regular
+import nexfor.core.ui.generated.resources.inter_semibold
 import org.jetbrains.compose.resources.Font
 
 @Composable

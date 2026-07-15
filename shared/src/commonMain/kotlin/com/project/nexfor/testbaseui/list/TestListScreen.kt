@@ -30,17 +30,17 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.project.nexfor.designsystem.components.AppDialogHost
-import com.project.nexfor.designsystem.components.AppScaffold
-import com.project.nexfor.designsystem.components.EmptyStateView
-import com.project.nexfor.designsystem.components.ErrorStateView
-import com.project.nexfor.designsystem.components.LoadState
-import com.project.nexfor.designsystem.components.TopBarConfig
-import com.project.nexfor.designsystem.AppSpacing
-import com.project.nexfor.designsystem.components.AppButton
-import com.project.nexfor.designsystem.components.AppOutlinedButton
-import com.project.nexfor.designsystem.components.BottomBarConfig
-import com.project.nexfor.designsystem.components.BottomNavItem
+import com.project.nexfor.core.ui.designsystem.components.AppDialogHost
+import com.project.nexfor.core.ui.designsystem.components.AppScaffold
+import com.project.nexfor.core.ui.designsystem.components.EmptyStateView
+import com.project.nexfor.core.ui.designsystem.components.ErrorStateView
+import com.project.nexfor.core.ui.designsystem.components.LoadState
+import com.project.nexfor.core.ui.designsystem.components.TopBarConfig
+import com.project.nexfor.core.ui.designsystem.AppSpacing
+import com.project.nexfor.core.ui.designsystem.components.AppButton
+import com.project.nexfor.core.ui.designsystem.components.AppOutlinedButton
+import com.project.nexfor.core.ui.designsystem.components.BottomBarConfig
+import com.project.nexfor.core.ui.designsystem.components.BottomNavItem
 import kotlinx.coroutines.launch
 
 /**

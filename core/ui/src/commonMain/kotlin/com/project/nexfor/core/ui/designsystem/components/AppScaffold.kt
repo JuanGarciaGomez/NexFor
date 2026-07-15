@@ -1,4 +1,4 @@
-package com.project.nexfor.designsystem.components
+package com.project.nexfor.core.ui.designsystem.components
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues

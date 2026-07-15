@@ -1,4 +1,4 @@
-package com.project.nexfor.mvi
+package com.project.nexfor.core.ui.mvi
 
 /**
  * ============================================================================
