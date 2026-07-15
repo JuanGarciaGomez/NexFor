@@ -4,7 +4,6 @@ import androidx.lifecycle.viewModelScope
 import com.project.nexfor.designsystem.components.AppDialog
 import com.project.nexfor.designsystem.components.LoadState
 import com.project.nexfor.mvi.BaseViewModel
-import com.project.nexfor.testbaseui.detail.TestDetailSideEffect
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -29,7 +28,6 @@ class TestListViewModel : BaseViewModel<TestListUiState, TestListIntent, TestLis
                 sendEffect { TestListSideEffect.NavigateToDetail(intent.item.id) }
 
             is TestListIntent.ShowDialog -> showDialog()
-            else -> {}
         }
     }
 
