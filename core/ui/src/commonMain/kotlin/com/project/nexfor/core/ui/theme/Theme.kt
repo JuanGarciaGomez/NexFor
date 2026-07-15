@@ -1,4 +1,4 @@
-package com.project.nexfor.theme
+package com.project.nexfor.core.ui.theme
 
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
