@@ -137,7 +137,7 @@ jobs:
 
   # ── 7. Summary — all jobs must pass or be intentionally skipped ──
   summary:
-    name: PR Checks Summary
+    name: Git Flow OK
     runs-on: ubuntu-latest
     if: always()
     needs:
