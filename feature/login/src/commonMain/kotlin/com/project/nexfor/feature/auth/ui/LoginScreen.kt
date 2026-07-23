@@ -1,7 +1,6 @@
 package com.project.nexfor.feature.auth.ui
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -19,7 +18,6 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Email
-import androidx.compose.material.icons.filled.Fingerprint
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Login
 import androidx.compose.material.icons.filled.Preview
@@ -41,18 +39,16 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.project.nexfor.core.ui.designsystem.components.AppScaffold
 import com.project.nexfor.core.ui.designsystem.components.LoadState
 import com.project.nexfor.core.ui.theme.NexForTheme
-import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -62,14 +58,8 @@ fun LoginScreen(viewModel: LoginViewModel = koinViewModel()) {
     LaunchedEffect(Unit) {
         viewModel.effect.collect { effect ->
             when (effect) {
-                is LoginEffect.NavigateToDashboard -> {
-                    println("🚀 Navigate to Dashboard")
-                }
-
-                is LoginEffect.ShowError -> {
-                    println("❌ Error: ${effect.message}")
-                }
-
+                is LoginEffect.NavigateToDashboard -> {}
+                is LoginEffect.ShowError -> {}
                 LoginEffect.NavigateToForgotPassword -> {}
             }
         }
@@ -125,7 +115,7 @@ fun LoginContent(
                 Spacer(modifier = Modifier.height(16.dp))
 
                 Text(
-                    text = "ClipperOS",
+                    text = "NexFor",
                     color = MaterialTheme.colorScheme.onBackground,
                     style = MaterialTheme.typography.headlineLarge
                 )
@@ -138,54 +128,6 @@ fun LoginContent(
 
                 Spacer(modifier = Modifier.height(32.dp))
 
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(50.dp)
-                        .background(MaterialTheme.colorScheme.surface, shape = CircleShape)
-                        .padding(4.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    val isStaffSelected = state.role == "Staff"
-
-                    Box(
-                        modifier = Modifier
-                            .weight(1f)
-                            .fillMaxSize()
-                            .background(
-                                color = if (isStaffSelected) MaterialTheme.colorScheme.primary else Color.Transparent,
-                                shape = CircleShape
-                            )
-                            .clickable { onIntent(LoginIntent.RoleChanged("Staff")) },
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Text(
-                            text = "Staff",
-                            color = if (isStaffSelected) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurfaceVariant,
-                            style = MaterialTheme.typography.titleMedium
-                        )
-                    }
-                    Box(
-                        modifier = Modifier
-                            .weight(1f)
-                            .fillMaxSize()
-                            .background(
-                                color = if (!isStaffSelected) MaterialTheme.colorScheme.primary else Color.Transparent,
-                                shape = CircleShape
-                            )
-                            .clickable { onIntent(LoginIntent.RoleChanged("Owner")) },
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Text(
-                            text = "Owner",
-                            color = if (!isStaffSelected) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurfaceVariant,
-                            style = MaterialTheme.typography.titleMedium
-                        )
-                    }
-                }
-
-                Spacer(modifier = Modifier.height(24.dp))
-
                 Column(modifier = Modifier.fillMaxWidth()) {
                     Text(
                         text = "EMAIL",
@@ -196,11 +138,11 @@ fun LoginContent(
                     OutlinedTextField(
                         value = state.email,
                         onValueChange = { onIntent(LoginIntent.EmailChanged(it)) },
-                        placeholder = { 
+                        placeholder = {
                             Text(
-                                text = "you@clippers.co", 
-                                color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f) 
-                            ) 
+                                text = "you@nexfor.co",
+                                color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)
+                            )
                         },
                         leadingIcon = {
                             Icon(
@@ -235,11 +177,11 @@ fun LoginContent(
                     OutlinedTextField(
                         value = state.password,
                         onValueChange = { onIntent(LoginIntent.PasswordChanged(it)) },
-                        placeholder = { 
+                        placeholder = {
                             Text(
-                                text = "••••••••", 
-                                color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f) 
-                            ) 
+                                text = "••••••••",
+                                color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)
+                            )
                         },
                         leadingIcon = {
                             Icon(
@@ -252,7 +194,11 @@ fun LoginContent(
                             val icon =
                                 if (passwordVisible) Icons.Default.Visibility else Icons.Default.VisibilityOff
                             IconButton(onClick = { passwordVisible = !passwordVisible }) {
-                                Icon(icon, contentDescription = null, tint = MaterialTheme.colorScheme.onSurfaceVariant)
+                                Icon(
+                                    icon,
+                                    contentDescription = null,
+                                    tint = MaterialTheme.colorScheme.onSurfaceVariant
+                                )
                             }
                         },
                         visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
@@ -292,8 +238,8 @@ fun LoginContent(
                         )
                         Spacer(modifier = Modifier.width(8.dp))
                         Text(
-                            text = "Remember me", 
-                            color = MaterialTheme.colorScheme.onSurfaceVariant, 
+                            text = "Remember me",
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
                             style = MaterialTheme.typography.bodyMedium
                         )
                     }
@@ -329,58 +275,13 @@ fun LoginContent(
                         Icon(imageVector = Icons.Default.Login, contentDescription = null)
                         Spacer(modifier = Modifier.width(8.dp))
                         Text(
-                            text = "Sign In", 
+                            text = "Sign In",
                             style = MaterialTheme.typography.titleLarge
                         )
                     }
                 }
 
                 Spacer(modifier = Modifier.height(12.dp))
-
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(56.dp)
-                        .background(MaterialTheme.colorScheme.surface, shape = CircleShape)
-                        .border(1.dp, MaterialTheme.colorScheme.outline, shape = CircleShape)
-                        .clip(CircleShape)
-                        .clickable { onIntent(LoginIntent.BiometricSubmit) },
-                    contentAlignment = Alignment.Center
-                ) {
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        Icon(
-                            imageVector = Icons.Default.Fingerprint,
-                            contentDescription = null,
-                            tint = NexForTheme.extra.teal
-                        )
-                        Spacer(modifier = Modifier.width(8.dp))
-                        Text(
-                            text = "Use Face / Touch ID",
-                            color = NexForTheme.extra.teal,
-                            style = MaterialTheme.typography.titleMedium
-                        )
-                    }
-                }
-            }
-
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .align(Alignment.BottomCenter)
-                    .padding(bottom = 16.dp),
-                horizontalArrangement = Arrangement.Center
-            ) {
-                Text(
-                    text = "Don't have an account? ", 
-                    color = MaterialTheme.colorScheme.onSurfaceVariant, 
-                    style = MaterialTheme.typography.labelLarge
-                )
-                Text(
-                    text = "Contact your manager",
-                    color = MaterialTheme.colorScheme.onBackground,
-                    style = MaterialTheme.typography.labelLarge.copy(fontWeight = FontWeight.Bold),
-                    modifier = Modifier.clickable { }
-                )
             }
         }
     }
