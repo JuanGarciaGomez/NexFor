@@ -42,9 +42,11 @@ kotlin {
         commonMain.dependencies {
             implementation(projects.core.network)
             implementation(projects.core.ui)
+            implementation(projects.feature.login)
 
             implementation(libs.koin.core)
             implementation(libs.koin.compose)
+            implementation(libs.koin.compose.viewmodel)
 
             implementation(libs.compose.runtime)
             implementation(libs.compose.foundation)

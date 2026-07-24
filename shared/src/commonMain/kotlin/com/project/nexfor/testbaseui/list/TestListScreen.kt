@@ -7,9 +7,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.safeContentPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
@@ -42,6 +40,7 @@ import com.project.nexfor.core.ui.designsystem.components.AppOutlinedButton
 import com.project.nexfor.core.ui.designsystem.components.BottomBarConfig
 import com.project.nexfor.core.ui.designsystem.components.BottomNavItem
 import kotlinx.coroutines.launch
+import org.koin.compose.viewmodel.koinViewModel
 
 /**
  * ============================================================================
@@ -61,7 +60,7 @@ import kotlinx.coroutines.launch
  */
 @Composable
 fun TestListScreen(
-    viewModel: TestListViewModel,
+    viewModel: TestListViewModel = koinViewModel(),
     onBackClick: () -> Unit,
     onNavigateToDetail: (String) -> Unit
 ) {
