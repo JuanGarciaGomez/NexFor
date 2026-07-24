@@ -43,6 +43,9 @@ kotlin {
             implementation(projects.core.network)
             implementation(projects.core.ui)
             implementation(projects.feature.login)
+            implementation(projects.feature.appointment)
+            implementation(projects.data.appointment)
+            implementation(projects.domain.appointment)
 
             implementation(libs.koin.core)
             implementation(libs.koin.compose)
