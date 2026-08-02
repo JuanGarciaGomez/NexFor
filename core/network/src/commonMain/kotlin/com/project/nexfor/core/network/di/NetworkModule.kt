@@ -24,5 +24,5 @@ val networkModule = module {
      * Note: In a real app, 'isDebug' would be provided by a BuildKonfig or similar.
      * Here we default to true for development.
      */
-    single { get<HttpClientFactory>().create(isDebug = true) }
+    single<HttpClient> { get<HttpClientFactory>().create(isDebug = true) }
 }

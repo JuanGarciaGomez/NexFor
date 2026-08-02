@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<network-security-config>
+    <domain-config cleartextTrafficPermitted="true">
+        <domain includeSubdomains="true">nexfor-nexfor-backend-qx0w43-d2e849-2-24-195-136.traefik.me</domain>
+    </domain-config>
+</network-security-config>

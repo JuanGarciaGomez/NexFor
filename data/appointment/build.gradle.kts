@@ -26,6 +26,10 @@ kotlin {
         commonMain.dependencies {
             implementation(project(":domain:appointment"))
             implementation(project(":core:network"))
+            
+            implementation(libs.ktor.client.core)
+            implementation(libs.ktor.serialization.kotlinx.json)
+
             implementation(libs.koin.core)
             implementation(libs.kotlinx.serialization.json)
         }

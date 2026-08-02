@@ -5,6 +5,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
+import com.project.nexfor.feature.appointment.AppointmentScreen
 import com.project.nexfor.feature.auth.ui.LoginScreen
 import com.project.nexfor.testbaseui.detail.TestDetailScreen
 import com.project.nexfor.testbaseui.list.TestListScreen
@@ -13,7 +14,7 @@ import com.project.nexfor.testbaseui.list.TestListScreen
 fun NexForNavGraph(navController: NavHostController) {
     NavHost(
         navController = navController,
-        startDestination = Screen.Login
+        startDestination = Screen.Appointments
     ) {
         composable<Screen.TestList> {
             TestListScreen(
@@ -46,6 +47,10 @@ fun NexForNavGraph(navController: NavHostController) {
 
         composable<Screen.Reports> {
             // TODO: Implement Reports screen
+        }
+
+        composable<Screen.Appointments> {
+            AppointmentScreen()
         }
     }
 }
