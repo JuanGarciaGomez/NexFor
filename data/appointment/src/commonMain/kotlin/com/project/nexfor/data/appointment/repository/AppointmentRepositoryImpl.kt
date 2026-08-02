@@ -1,14 +1,14 @@
 package com.project.nexfor.data.appointment.repository
 
+import com.project.nexfor.data.appointment.mapper.toDomain
+import com.project.nexfor.data.appointment.remote.AppointmentApiService
 import com.project.nexfor.domain.appointment.model.Appointment
 import com.project.nexfor.domain.appointment.repository.AppointmentRepository
 
-class AppointmentRepositoryImpl : AppointmentRepository {
+class AppointmentRepositoryImpl(
+    private val apiService: AppointmentApiService
+) : AppointmentRepository {
     override suspend fun getAppointments(): List<Appointment> {
-        // Mock data for now
-        return listOf(
-            Appointment("1", "Dentist", "Routine checkup", "2023-10-25", "Scheduled"),
-            Appointment("2", "Business Meeting", "Discuss project NexFor", "2023-10-26", "Scheduled")
-        )
+        return apiService.getAppointments().data.map { it.toDomain() }
     }
 }

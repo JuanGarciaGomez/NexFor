@@ -20,10 +20,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.project.nexfor.domain.appointment.model.Appointment
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun AppointmentScreen(
-    viewModel: AppointmentViewModel
+    viewModel: AppointmentViewModel = koinViewModel(),
 ) {
     val state by viewModel.state.collectAsState()
 
@@ -37,6 +38,7 @@ fun AppointmentScreen(
                 is AppointmentContract.Effect.ShowError -> {
                     // Handle error (e.g. snackbar)
                 }
+
                 is AppointmentContract.Effect.NavigateToDetail -> {
                     // Navigate
                 }
@@ -80,8 +82,9 @@ private fun AppointmentItem(
             .clickable(onClick = onClick)
             .padding(16.dp)
     ) {
-        Text(text = appointment.title, style = MaterialTheme.typography.titleMedium)
-        Text(text = appointment.date, style = MaterialTheme.typography.bodySmall)
-        Text(text = appointment.status, style = MaterialTheme.typography.bodyMedium)
+        Text(text = "Customer: ${appointment.customerName}", style = MaterialTheme.typography.titleMedium)
+        Text(text = "Date: ${appointment.appointmentDate} (${appointment.startTime} - ${appointment.endTime})", style = MaterialTheme.typography.bodySmall)
+        Text(text = "Status: ${appointment.status}", style = MaterialTheme.typography.bodyMedium)
+        Text(text = "Services: ${appointment.services.joinToString(", ")}", style = MaterialTheme.typography.bodySmall)
     }
 }
