@@ -4,8 +4,9 @@ import io.ktor.client.HttpClient
 import io.ktor.client.plugins.DefaultRequest
 import io.ktor.client.plugins.HttpTimeout
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
-import io.ktor.client.plugins.logging.LogLevel
+import io.ktor.client.plugins.logging.Logger
 import io.ktor.client.plugins.logging.Logging
+import io.ktor.client.plugins.logging.LogLevel
 import io.ktor.http.ContentType
 import io.ktor.http.contentType
 import io.ktor.serialization.kotlinx.json.json
@@ -41,7 +42,12 @@ class HttpClientFactory(
 
             // Logging configuration
             install(Logging) {
-                level = if (isDebug) LogLevel.HEADERS else LogLevel.NONE
+                logger = object : Logger {
+                    override fun log(message: String) {
+                        println("Ktor-HTTP: $message")
+                    }
+                }
+                level = if (isDebug) LogLevel.ALL else LogLevel.NONE
             }
 
             // Authentication interceptor
@@ -49,6 +55,7 @@ class HttpClientFactory(
 
             // Default headers
             install(DefaultRequest) {
+                url("http://nexfor-nexfor-backend-qx0w43-d2e849-2-24-195-136.traefik.me/api/")
                 contentType(ContentType.Application.Json)
             }
         }

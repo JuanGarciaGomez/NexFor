@@ -1,6 +1,8 @@
 package com.project.nexfor.di
 
 import com.project.nexfor.core.network.di.networkModule
+import com.project.nexfor.data.appointment.di.dataAppointmentModule
+import com.project.nexfor.feature.appointment.di.featureAppointmentModule
 import com.project.nexfor.feature.auth.di.loginModule
 import org.koin.core.context.startKoin
 import org.koin.dsl.KoinAppDeclaration
@@ -25,5 +27,7 @@ fun initKoin(appDeclaration: KoinAppDeclaration = {}) =
             appModule,
             networkModule,
             loginModule,
+            dataAppointmentModule,
+            featureAppointmentModule,
         )
     }
