@@ -14,7 +14,7 @@ import com.project.nexfor.testbaseui.list.TestListScreen
 fun NexForNavGraph(navController: NavHostController) {
     NavHost(
         navController = navController,
-        startDestination = Screen.Appointments
+        startDestination = Screen.Login
     ) {
         composable<Screen.TestList> {
             TestListScreen(
