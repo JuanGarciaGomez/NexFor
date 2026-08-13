@@ -34,7 +34,13 @@ fun NexForNavGraph(navController: NavHostController) {
         }
 
         composable<Screen.Login> {
-            LoginScreen()
+            LoginScreen(
+                onLoginSuccess = {
+                    navController.navigate(Screen.Appointments) {
+                        popUpTo(Screen.Login) { inclusive = true }
+                    }
+                }
+            )
         }
 
         composable<Screen.Schedule> {

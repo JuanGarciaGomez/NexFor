@@ -52,13 +52,16 @@ import com.project.nexfor.core.ui.theme.NexForTheme
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
-fun LoginScreen(viewModel: LoginViewModel = koinViewModel()) {
+fun LoginScreen(
+    viewModel: LoginViewModel = koinViewModel(),
+    onLoginSuccess: () -> Unit
+) {
     val state by viewModel.state.collectAsStateWithLifecycle()
 
     LaunchedEffect(Unit) {
         viewModel.effect.collect { effect ->
             when (effect) {
-                is LoginEffect.NavigateToDashboard -> {}
+                is LoginEffect.NavigateToDashboard -> onLoginSuccess()
                 is LoginEffect.ShowError -> {}
                 LoginEffect.NavigateToForgotPassword -> {}
             }
