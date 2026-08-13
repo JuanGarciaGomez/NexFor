@@ -1,5 +1,6 @@
 package com.project.nexfor.di
 
+import com.project.nexfor.core.network.client.SessionManager
 import com.project.nexfor.core.network.di.networkModule
 import com.project.nexfor.data.appointment.di.dataAppointmentModule
 import com.project.nexfor.feature.appointment.di.featureAppointmentModule
@@ -32,4 +33,6 @@ fun initKoin(appDeclaration: KoinAppDeclaration = {}) =
             dataAppointmentModule,
             featureAppointmentModule,
         )
+    }.also {
+        it.koin.get<SessionManager>().restoreSession()
     }

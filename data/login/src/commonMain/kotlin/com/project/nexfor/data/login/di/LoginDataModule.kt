@@ -8,6 +8,11 @@ import org.koin.dsl.module
 
 val loginDataModule = module {
     single { LoginApiService(get()) }
-    single<LoginRepository> { LoginRepositoryImpl(get()) }
+    single<LoginRepository> {
+        LoginRepositoryImpl(
+            loginApiService = get(),
+            sessionManager = get()
+        )
+    }
     factory { LoginUseCase(get()) }
 }
