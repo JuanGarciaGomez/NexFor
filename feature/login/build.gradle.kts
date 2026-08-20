@@ -25,6 +25,7 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
+            implementation(project(":domain:login"))
             implementation(project(":core:ui"))
             implementation(libs.koin.core)
             implementation(libs.koin.compose)
