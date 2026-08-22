@@ -2,6 +2,8 @@ package com.project.nexfor.core.ui.designsystem.components
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -9,6 +11,8 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.tooling.preview.Preview
+import com.project.nexfor.core.ui.theme.NexForTheme
 
 data class TopBarConfig(
     val title: String = "",
@@ -43,4 +47,30 @@ fun AppTopBar(config: TopBarConfig) {
             }
         }
     )
+}
+
+
+@Preview(name = "NexFor - TopBar", showBackground = true, backgroundColor = 0xFF121212)
+@Composable
+fun AppTopBarPreview() {
+    NexForTheme {
+        AppTopBar(
+            config = TopBarConfig(
+                title = "NexForTitle",
+                showBack = true,
+                onBackClick = {},
+                actions = listOf(
+                    TopBarAction(
+                        icon = Icons.Default.Delete,
+                        contentDescription = "",
+                        onClick = {}
+                    ),
+                    TopBarAction(
+                        icon = Icons.Default.Add,
+                        contentDescription = "",
+                        onClick = {}
+                    ))
+            )
+        )
+    }
 }

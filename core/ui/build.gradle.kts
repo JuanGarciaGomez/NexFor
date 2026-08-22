@@ -33,6 +33,12 @@ kotlin {
             implementation(libs.androidx.lifecycle.viewmodelCompose)
             implementation(libs.androidx.lifecycle.runtimeCompose)
             api(libs.material.icons.extended)
+            implementation(libs.compose.uiToolingPreview)
+        }
+
+        //REVIEW THIS IMPLEMENTATION
+        androidMain.dependencies {
+            implementation(libs.compose.uiTooling)
         }
     }
 }

@@ -5,7 +5,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
-import com.project.nexfor.feature.appointment.AppointmentScreen
+import com.project.nexfor.feature.appointment.ui.AppointmentScreen
 import com.project.nexfor.feature.auth.ui.LoginScreen
 import com.project.nexfor.testbaseui.detail.TestDetailScreen
 import com.project.nexfor.testbaseui.list.TestListScreen
