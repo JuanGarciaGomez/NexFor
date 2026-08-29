@@ -31,7 +31,9 @@ import com.project.nexfor.feature.appointment.model.DayUi
 import com.project.nexfor.feature.appointment.model.toUi
 import com.project.nexfor.feature.appointment.ui.components.DateSelector
 import com.project.nexfor.feature.appointment.ui.components.DayTimeline
+import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.LocalDate
+import kotlinx.datetime.plus
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -97,17 +99,16 @@ fun AppointmentContent(state: AppointmentState, onIntent: (AppointmentIntent) ->
                 selectedDate = state.selectedDate,
                 onDateSelected = { onIntent(AppointmentIntent.OnDateSelected(it)) }
             )
-            Spacer(Modifier.height(20.dp))
+            Spacer(Modifier.height(16.dp))
             Box(
                 modifier = Modifier
                     .fillMaxSize()
                     .weight(1f)
                     .verticalScroll(rememberScrollState())
-                    .padding(horizontal = 16.dp)
             ) {
                 DayTimeline(
-                    startHour = 15,
-                    endHour = 20,
+                    startHour = 8,
+                    endHour = 22,
                     appointments = dayAppointments,
                     onAppointmentClick = { /* ... */ },
                     onAvailableClick = { /* ... */ }
@@ -117,23 +118,39 @@ fun AppointmentContent(state: AppointmentState, onIntent: (AppointmentIntent) ->
     }
 }
 
-
-@Preview(name = "NexFor - Appointment Screen", showBackground = true, backgroundColor = 0xFF121212)
+@Preview(name = "Appointment Screen - Confirmed State", showBackground = true)
 @Composable
 fun AppointmentScreenPreview() {
+    val mockDate = LocalDate(2026, 8, 15)
+    val mockAppointments = listOf(
+        com.project.nexfor.domain.appointment.model.Appointment(
+            id = "1",
+            appointmentDate = "2026-08-15",
+            startTime = "08:45:00",
+            endTime = "09:15:00",
+            status = "confirmed",
+            customerName = "Juan Pérez",
+            services = listOf("Corte ejecutivo", "Barba")
+        ),
+        com.project.nexfor.domain.appointment.model.Appointment(
+            id = "2",
+            appointmentDate = "2026-08-15",
+            startTime = "10:30:00",
+            endTime = "11:30:00",
+            status = "pending",
+            customerName = "Andrés Gómez",
+            services = listOf("Limpieza facial")
+        )
+    )
+
     NexForTheme {
         AppointmentContent(
             state = AppointmentState(
-                selectedDate = LocalDate(2024, 8, 14),
-                visibleDays = listOf(
-                    DayUi(LocalDate(2024, 8, 12), "Mon", 12),
-                    DayUi(LocalDate(2024, 8, 13), "Tue", 13),
-                    DayUi(LocalDate(2024, 8, 14), "Wed", 14),
-                    DayUi(LocalDate(2024, 8, 15), "Thu", 15),
-                    DayUi(LocalDate(2024, 8, 16), "Fri", 16),
-                    DayUi(LocalDate(2024, 8, 17), "Sat", 17),
-                    DayUi(LocalDate(2024, 8, 18), "Sun", 18),
-                )
+                appointments = mockAppointments,
+                selectedDate = mockDate,
+                visibleDays = (-2..4).map { offset -> 
+                    DayUi(mockDate.plus(offset, DateTimeUnit.DAY), "Day", 10)
+                }
             ),
             onIntent = {}
         )

@@ -31,6 +31,7 @@ fun DayTimeline(
         modifier = modifier
             .fillMaxWidth()
             .height(totalHeight)
+            .padding(16.dp)
     ) {
         val labelWidth = 52.dp
         val contentStartX = labelWidth + 12.dp
