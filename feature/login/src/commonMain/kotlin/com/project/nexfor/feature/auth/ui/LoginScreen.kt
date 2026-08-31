@@ -291,7 +291,7 @@ fun LoginContent(
 }
 
 
-@Preview(name = "ClipperOS - Login Inicial", showBackground = true, backgroundColor = 0xFF121212)
+@Preview(name = "NexFor - Login Inicial", showBackground = true, backgroundColor = 0xFF121212)
 @Composable
 fun LoginContentPreview() {
     NexForTheme {
@@ -308,7 +308,7 @@ fun LoginContentPreview() {
     }
 }
 
-@Preview(name = "ClipperOS - Estado de Carga", showBackground = true, backgroundColor = 0xFF121212)
+@Preview(name = "NexFor - Estado de Carga", showBackground = true, backgroundColor = 0xFF121212)
 @Composable
 fun LoginContentLoadingPreview() {
     NexForTheme {

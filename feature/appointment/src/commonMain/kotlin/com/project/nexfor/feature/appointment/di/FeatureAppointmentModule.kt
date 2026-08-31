@@ -1,6 +1,6 @@
 package com.project.nexfor.feature.appointment.di
 
-import com.project.nexfor.feature.appointment.AppointmentViewModel
+import com.project.nexfor.feature.appointment.ui.AppointmentViewModel
 import org.koin.compose.viewmodel.dsl.viewModelOf
 import org.koin.dsl.module
 

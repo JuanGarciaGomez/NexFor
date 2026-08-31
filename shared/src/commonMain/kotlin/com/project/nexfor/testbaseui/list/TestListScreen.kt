@@ -86,7 +86,7 @@ fun TestListScreen(
     AppScaffold(
         topBarConfig = TopBarConfig(title = "Clientes", showBack = true, onBackClick = onBackClick),
         bottomBarConfig = BottomBarConfig(
-            items = listOf(BottomNavItem.Home, BottomNavItem.Profile),
+            items = listOf(BottomNavItem.Schedule, BottomNavItem.Bill),
             currentRoute = "",
             onItemClick = {}),
         isLoading = state.loadState is LoadState.Loading && state.items.isEmpty(),
