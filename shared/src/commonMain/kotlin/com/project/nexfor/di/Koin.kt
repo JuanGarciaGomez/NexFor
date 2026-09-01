@@ -3,9 +3,9 @@ package com.project.nexfor.di
 import com.project.nexfor.core.network.client.SessionManager
 import com.project.nexfor.core.network.di.networkModule
 import com.project.nexfor.data.appointment.di.dataAppointmentModule
+import com.project.nexfor.data.login.di.loginDataModule
 import com.project.nexfor.feature.appointment.di.featureAppointmentModule
 import com.project.nexfor.feature.auth.di.loginModule
-import com.project.nexfor.data.login.di.loginDataModule
 import org.koin.core.context.startKoin
 import org.koin.dsl.KoinAppDeclaration
 import org.koin.dsl.module
