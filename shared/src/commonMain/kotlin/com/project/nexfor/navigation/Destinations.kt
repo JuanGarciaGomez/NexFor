@@ -23,4 +23,7 @@ sealed interface Screen {
     data object Reports : Screen
     @Serializable
     data object Appointments : Screen
+
+    @Serializable
+    data object CreateAppointment : Screen
 }
