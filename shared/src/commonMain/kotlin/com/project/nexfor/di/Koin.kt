@@ -2,8 +2,10 @@ package com.project.nexfor.di
 
 import com.project.nexfor.core.network.client.SessionManager
 import com.project.nexfor.core.network.di.networkModule
-import com.project.nexfor.data.appointment.di.dataAppointmentModule
+import com.project.nexfor.data.customer.di.dataCustomerModule
 import com.project.nexfor.data.login.di.loginDataModule
+import com.project.nexfor.data.service.di.dataAppointmentModule
+import com.project.nexfor.data.service.di.dataServiceModule
 import com.project.nexfor.feature.appointment.di.featureAppointmentModule
 import com.project.nexfor.feature.auth.di.loginModule
 import org.koin.core.context.startKoin
@@ -31,6 +33,8 @@ fun initKoin(appDeclaration: KoinAppDeclaration = {}) =
             loginModule,
             loginDataModule,
             dataAppointmentModule,
+            dataCustomerModule,
+            dataServiceModule,
             featureAppointmentModule,
         )
     }.also {

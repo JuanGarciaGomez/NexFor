@@ -39,6 +39,7 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 fun AppointmentScreen(
     viewModel: AppointmentViewModel = koinViewModel(),
+    onNavigateToCreate: () -> Unit
 ) {
     val state by viewModel.state.collectAsState()
 
@@ -57,13 +58,18 @@ fun AppointmentScreen(
 
     AppointmentContent(
         state = state,
-        onIntent = viewModel::onIntent
+        onIntent = viewModel::onIntent,
+        onNavigateToCreate = onNavigateToCreate
     )
 
 }
 
 @Composable
-fun AppointmentContent(state: AppointmentState, onIntent: (AppointmentIntent) -> Unit) {
+fun AppointmentContent(
+    state: AppointmentState,
+    onIntent: (AppointmentIntent) -> Unit,
+    onNavigateToCreate: () -> Unit
+) {
     val dayAppointments = remember(state.appointments, state.selectedDate) {
         state.appointments
             .map { it.toUi() }
@@ -79,7 +85,7 @@ fun AppointmentContent(state: AppointmentState, onIntent: (AppointmentIntent) ->
         ),
         floatingActionButton = {
             FloatingActionButton(
-                onClick = { /* futuro intent: CreateAppointment */ },
+                onClick = onNavigateToCreate,
                 containerColor = MaterialTheme.colorScheme.primary,
                 contentColor = MaterialTheme.colorScheme.onPrimary,
                 shape = CircleShape
@@ -148,11 +154,12 @@ fun AppointmentScreenPreview() {
             state = AppointmentState(
                 appointments = mockAppointments,
                 selectedDate = mockDate,
-                visibleDays = (-2..4).map { offset -> 
+                visibleDays = (-2..4).map { offset ->
                     DayUi(mockDate.plus(offset, DateTimeUnit.DAY), "Day", 10)
                 }
             ),
-            onIntent = {}
+            onIntent = {},
+            onNavigateToCreate = {}
         )
     }
 }

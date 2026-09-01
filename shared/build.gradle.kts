@@ -46,7 +46,11 @@ kotlin {
             implementation(projects.data.login)
             implementation(projects.feature.appointment)
             implementation(projects.data.appointment)
+            implementation(projects.data.customer)
+            implementation(projects.data.service)
             implementation(projects.domain.appointment)
+            implementation(projects.domain.customer)
+            implementation(projects.domain.service)
 
             implementation(libs.koin.core)
             implementation(libs.koin.compose)
