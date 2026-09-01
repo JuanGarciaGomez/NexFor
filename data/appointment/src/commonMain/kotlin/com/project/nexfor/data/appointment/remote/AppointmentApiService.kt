@@ -1,7 +1,7 @@
-package com.project.nexfor.data.service.remote
+package com.project.nexfor.data.appointment.remote
 
-import com.project.nexfor.data.service.dto.AppointmentResponseDto
-import com.project.nexfor.data.service.dto.CreateAppointmentRequestDto
+import com.project.nexfor.data.appointment.dto.AppointmentResponseDto
+import com.project.nexfor.data.appointment.dto.CreateAppointmentRequestDto
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.get

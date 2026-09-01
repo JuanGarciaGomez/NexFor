@@ -1,8 +1,8 @@
-package com.project.nexfor.data.service.mapper
+package com.project.nexfor.data.appointment.mapper
 
-import com.project.nexfor.data.service.dto.AppointmentDto
-import com.project.nexfor.data.service.dto.AppointmentServiceRequestDto
-import com.project.nexfor.data.service.dto.CreateAppointmentRequestDto
+import com.project.nexfor.data.appointment.dto.AppointmentDto
+import com.project.nexfor.data.appointment.dto.AppointmentServiceRequestDto
+import com.project.nexfor.data.appointment.dto.CreateAppointmentRequestDto
 import com.project.nexfor.domain.appointment.model.Appointment
 import com.project.nexfor.domain.appointment.model.CreateAppointmentRequest
 

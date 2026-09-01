@@ -1,4 +1,4 @@
-package com.project.nexfor.data.service.dto
+package com.project.nexfor.data.appointment.dto
 
 import kotlinx.serialization.Serializable
 

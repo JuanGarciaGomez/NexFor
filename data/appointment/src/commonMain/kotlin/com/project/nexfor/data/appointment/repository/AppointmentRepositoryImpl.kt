@@ -1,8 +1,8 @@
-package com.project.nexfor.data.service.repository
+package com.project.nexfor.data.appointment.repository
 
-import com.project.nexfor.data.service.mapper.toDomain
-import com.project.nexfor.data.service.mapper.toDto
-import com.project.nexfor.data.service.remote.AppointmentApiService
+import com.project.nexfor.data.appointment.mapper.toDomain
+import com.project.nexfor.data.appointment.mapper.toDto
+import com.project.nexfor.data.appointment.remote.AppointmentApiService
 import com.project.nexfor.domain.appointment.exception.UnauthorizedException
 import com.project.nexfor.domain.appointment.model.Appointment
 import com.project.nexfor.domain.appointment.model.CreateAppointmentRequest
