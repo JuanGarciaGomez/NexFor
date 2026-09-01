@@ -26,6 +26,8 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             implementation(project(":domain:appointment"))
+            implementation(project(":domain:customer"))
+            implementation(project(":domain:service"))
             implementation(project(":core:ui"))
             
             implementation(libs.koin.core)
