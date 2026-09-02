@@ -69,9 +69,7 @@ fun CreateAppointmentScreen(
         viewModel.effect.collect { effect ->
             when (effect) {
                 CreateAppointmentEffect.NavigateBack -> onBack()
-                is CreateAppointmentEffect.ShowError -> {
-                    // Aquí podrías mostrar un SnackBar con effect.message
-                }
+                is CreateAppointmentEffect.ShowError -> {}
             }
         }
     }
@@ -197,7 +195,6 @@ fun CreateAppointmentContent(
                 .verticalScroll(rememberScrollState()),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            // Selector de Cliente
             SectionTitle("Seleccionar Cliente")
 
             var expanded by remember { mutableStateOf(false) }
@@ -241,7 +238,6 @@ fun CreateAppointmentContent(
             HorizontalDivider()
             Spacer(Modifier.height(16.dp))
 
-            // Sección Fecha y Hora
             SectionTitle("Fecha y Hora")
 
             Row(
@@ -309,7 +305,6 @@ fun CreateAppointmentContent(
             HorizontalDivider()
             Spacer(Modifier.height(16.dp))
 
-            // Sección Servicios
             SectionTitle("Servicios")
             state.availableServices.forEach { service ->
                 Row(
@@ -332,10 +327,6 @@ fun CreateAppointmentContent(
                     Spacer(Modifier.width(8.dp))
                     Column {
                         Text(text = service.name, style = MaterialTheme.typography.bodyLarge)
-                        Text(
-                            text = "Empleado ID: ${service.employeeId}",
-                            style = MaterialTheme.typography.labelSmall
-                        )
                     }
                 }
             }
@@ -344,7 +335,6 @@ fun CreateAppointmentContent(
             HorizontalDivider()
             Spacer(Modifier.height(16.dp))
 
-            // Notas
             OutlinedTextField(
                 value = state.notes,
                 onValueChange = { onIntent(CreateAppointmentIntent.OnNotesChanged(it)) },

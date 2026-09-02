@@ -35,6 +35,6 @@ sealed interface CreateAppointmentIntent : UiIntent {
 }
 
 sealed interface CreateAppointmentEffect : UiEffect {
-    data class ShowError(val message: String) : CreateAppointmentEffect
+    data class ShowError(val error: CreateAppointmentError) : CreateAppointmentEffect
     data object NavigateBack : CreateAppointmentEffect
 }

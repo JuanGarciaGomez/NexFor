@@ -3,6 +3,7 @@ package com.project.nexfor.data.appointment.repository
 import com.project.nexfor.data.appointment.mapper.toDomain
 import com.project.nexfor.data.appointment.mapper.toDto
 import com.project.nexfor.data.appointment.remote.AppointmentApiService
+import com.project.nexfor.core.network.model.HttpCodes
 import com.project.nexfor.domain.appointment.exception.UnauthorizedException
 import com.project.nexfor.domain.appointment.model.Appointment
 import com.project.nexfor.domain.appointment.model.CreateAppointmentRequest
@@ -19,7 +20,7 @@ class AppointmentRepositoryImpl(
     override suspend fun createAppointment(request: CreateAppointmentRequest): Result<Unit> {
         return runCatching {
             val response = apiService.createAppointment(request.toDto())
-            if (response.status.value == 401) {
+            if (response.status.value == HttpCodes.UNAUTHORIZED) {
                 throw UnauthorizedException("Session expired")
             }
             if (!response.status.isSuccess()) {

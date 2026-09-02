@@ -8,6 +8,9 @@ import com.project.nexfor.domain.appointment.model.CreateAppointmentRequest
 import com.project.nexfor.domain.appointment.usecase.CreateAppointmentUseCase
 import com.project.nexfor.domain.customer.usecase.GetCustomersUseCase
 import com.project.nexfor.domain.service.usecase.GetServicesUseCase
+import com.project.nexfor.feature.appointment.ui.create.CreateAppointmentError.INCOMPLETE_DATE_TIME
+import com.project.nexfor.feature.appointment.ui.create.CreateAppointmentError.NO_SERVICE_SELECTED
+import com.project.nexfor.feature.appointment.ui.create.CreateAppointmentError.UNAUTHORIZED
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 
@@ -85,19 +88,18 @@ class CreateAppointmentViewModel(
         val endTime = currentState.endTime
 
         if (date == null || startTime == null || endTime == null) {
-            sendEffect { CreateAppointmentEffect.ShowError("Por favor completa la fecha y hora") }
+            sendEffect { CreateAppointmentEffect.ShowError(INCOMPLETE_DATE_TIME) }
             return
         }
 
         if (currentState.selectedServiceIds.isEmpty()) {
-            sendEffect { CreateAppointmentEffect.ShowError("Por favor selecciona al menos un servicio") }
+            sendEffect { CreateAppointmentEffect.ShowError(NO_SERVICE_SELECTED) }
             return
         }
 
         viewModelScope.launch {
             setState { copy(isLoading = true, error = null) }
 
-            // Format date to YYYY-MM-DD as most backends expect when sending separate time fields
             val isoDate = date.toString()
 
             val appointmentServices = currentState.selectedServiceIds.map { serviceId ->
@@ -130,11 +132,11 @@ class CreateAppointmentViewModel(
                 .onFailure { throwable ->
                     setState { copy(isLoading = false) }
                     if (throwable is UnauthorizedException) {
-                         sendEffect { CreateAppointmentEffect.ShowError("Sesión expirada. Por favor, inicia sesión de nuevo.") }
+                        sendEffect { CreateAppointmentEffect.ShowError(UNAUTHORIZED) }
                     } else {
                         sendEffect {
                             CreateAppointmentEffect.ShowError(
-                                throwable.message ?: "Error al crear la cita"
+                                CreateAppointmentError.UNKNOWN
                             )
                         }
                     }
