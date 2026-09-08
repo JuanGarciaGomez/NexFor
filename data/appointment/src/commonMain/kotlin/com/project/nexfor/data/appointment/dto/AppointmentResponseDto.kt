@@ -7,7 +7,7 @@ data class AppointmentResponseDto(
     val success: Boolean,
     val statusCode: Int,
     val message: String,
-    val data: List<AppointmentDto>
+    val data: List<AppointmentDto>? = null
 )
 
 @Serializable

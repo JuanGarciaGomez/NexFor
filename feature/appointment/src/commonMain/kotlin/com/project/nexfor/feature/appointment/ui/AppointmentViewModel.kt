@@ -24,13 +24,17 @@ class AppointmentViewModel(
 
     init {
         selectDate(today)
+        loadAppointments()
     }
 
     override fun onIntent(intent: AppointmentIntent) {
         when (intent) {
             AppointmentIntent.LoadAppointments -> loadAppointments()
             is AppointmentIntent.OnAppointmentClick -> {}
-            is AppointmentIntent.OnDateSelected -> selectDate(intent.date)
+            is AppointmentIntent.OnDateSelected -> {
+                selectDate(intent.date)
+                loadAppointments()
+            }
         }
     }
 
